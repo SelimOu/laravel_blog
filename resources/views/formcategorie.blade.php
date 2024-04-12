@@ -14,10 +14,9 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-warning">
         <div class="container-fluid">
-            <a class="navbar-brand h1" href={{ route('posts.index') }}>Mes Posts</a>
+            <a class="navbar-brand h1" href={{ route('listcategorie') }}>categories</a>
             <div class="justify-end ">
                 <div class="col ">
-                    <a class="btn btn-sm btn-success" href={{ route('posts.create') }}>Ajouter dans Post</a>
                 </div>
             </div>
     </nav>
@@ -25,16 +24,12 @@
     <div class="container h-100 mt-5">
         <div class="row h-100 justify-content-center align-items-center">
             <div class="col-10 col-md-8 col-lg-6">
-                <h3>Ajouter un Post</h3>
-                <form action="{{ route('posts.store') }}" method="post">
+                <h3>AJouter une categorie</h3>
+                <form action="{{ route('creer.categorie') }}" method="post">
                     @csrf
                     <div class="form-group">
                         <label for="title">Title</label>
                         <input type="text" class="form-control" id="title" name="title" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="content">content</label>
-                        <input type="text" class="form-control" id="content" name="content" required>
                     </div>
                     <div class="form-group">
                         <label for="image">image</label>
@@ -44,20 +39,7 @@
                         <label for="description">description</label>
                         <input type="text" class="form-control" id="description" name="description" required>
                     </div>
-                    <div class="form-group">
-                        <label for="categorie">categorie</label>
-                        @if($errors->any())
-                        {{implode('', $errors->all('Veuillez cocher une categorie'))}}
-                        @endif
-                        
-                        @foreach ($categories as $categorie)
-                        
-                        <input type="checkbox" id="categorie" name="categorie[]" 
-                        value ="{{$categorie->id}}"  > {{$categorie->title}}
-                        
-                        @endforeach 
-                    </div>
-                    <button type="submit" class="btn btn-primary">Ajouter un Post</button>
+                    <button type="submit" class="btn btn-primary">Ajouter une categorie</button>
                 </form>
             </div>
         </div>

@@ -3,6 +3,10 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Dashboard') }}
         </h2>
+        <a href="/dashboard/posts"><button>Mes Posts</button></a>
+        @if($users === 'admin')
+        <a href="/dashboard/categories"><button>Toutes les categories</button></a>
+        @endif
     </x-slot>
 
     <div class="py-12">
@@ -11,17 +15,8 @@
                 <div class="p-6 text-gray-900">
                     {{ __("Connecté!") }}
                     <br> <br>
-
-                    <a href="/dashboard/posts"><button>Mes Posts</button></a>
                 </div>
             </div>
         </div>
-    </div>
-    <div>
-    
-    
-
-    
-   
     </div>
 </x-app-layout>

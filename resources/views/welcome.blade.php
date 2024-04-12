@@ -60,15 +60,18 @@
                         
                     
                    
-                    @foreach ($myPosts as $myPost)
+                    @foreach ($posts as $post)
+                    @if ($post->user)
                     <div class ="blog_container">
-                      <div>  {{$myPost['title']}}</div>
+                      <div>  {{$post['title']}}</div>
                       <div class="content_Container">
-                        <img src="{{$myPost['image']}}" alt="" class="imagesBlog" >
-                        {{$myPost['description']}}
-                        {{$myPost['content']}}
+                        <img src="{{$post['image']}}" alt="" class="imagesBlog" >
+                        {{$post['description']}}
+                        {{$post['content']}}
+                        {{$post->user->name}}
                     </div>
                     </div> <br>
+                    @endif
                         @endforeach
                     
 

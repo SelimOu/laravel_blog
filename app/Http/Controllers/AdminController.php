@@ -15,7 +15,6 @@ class AdminController extends Controller
         $users = Auth::user()->role;
         dump($users);
         
-            # code...
         
         if ($users === 'admin'){
         return view('dashboard',[

@@ -31,7 +31,8 @@
                     <div class="content_Container">
                       <img src="{{$post['image']}}" alt="" class="imagesBlog" >
                       {{$post['description']}} <br>
-                      {{$post['content']}}
+                      {{$post['content']}}<br>
+                      {{$post->user->name}}
                   </div>
                   </div> <br>
                         <div class="card-footer">

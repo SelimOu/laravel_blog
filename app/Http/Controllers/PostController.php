@@ -3,14 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 use App\Models\Post;
-
+use App\Models\categorie;
+use Illuminate\Support\Facades\Auth;
 class PostController extends Controller
 {
 
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::where('user_id',Auth::User()->id)->get();
 
         return view('posts.index', compact('posts'));
     }
@@ -23,9 +25,23 @@ class PostController extends Controller
             'description' => 'required',
             'content' => 'required',
             'image' => 'required|max:255',
+            'categorie' => 'required|max:255',
+            
         ]);
+        $post =new Post;
+        $post->title = $request->title;
+        $post->content = $request->content;
+        $post->description = $request->description;
+        $post->image = $request->image; 
+        $post->user_id = Auth::id();
+        $post->save();
 
-        Post::create($request->all());
+
+        foreach($request->categorie as $categories){
+
+        $post->categorie()->attach($categories);
+        }
+       
 
         return redirect()->route('posts.index')
             ->with('success', 'Post created successfully.');
@@ -39,6 +55,7 @@ class PostController extends Controller
             'description' => 'required',
             'content' => 'required',
             'image' => 'required|max:255',
+            'categorie' => 'required|max:255',
         ]);
 
         $post = Post::find($id);
@@ -59,8 +76,12 @@ class PostController extends Controller
     }
 
     public function create()
+
     {
-        return view('posts.create');
+        $categories = Categorie::all();
+        return view('posts.create',[
+            'categories'=>$categories
+        ]);
     }
 
 

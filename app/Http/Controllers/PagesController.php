@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use App\Models\Post;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class PagesController extends Controller
 {
@@ -26,12 +28,15 @@ class PagesController extends Controller
         'table' => $table,
         ]);
     }
-    public function welcome(): View
+    public function welcome(): view
     {
-        $myPosts = post::all();
+       
     return view('welcome',[
-        'myPosts' =>$myPosts,
+        'posts' => post::All(),
     ]);
     }
+
+
+    
 
 }
