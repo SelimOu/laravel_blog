@@ -43,6 +43,12 @@ Route::get('/dashboard/categories/{post}/edit', formcategorieController::class .
 
 Route::put('/dashboard/categories/{post}', formcategorieController::class .'@updateCategorie')->name('editCategorie');
 
+Route::get('/dashboard/users', [AdminController::class, 'users'])->middleware(['auth', 'verified'])->name('users');
+
+Route::delete('/dashboard/users/{post}', AdminController::class .'@destroy')->name('destroyUsers');
+
+Route::put('/dashboard/posts/{post}', AdminController::class .'@update')->name('updateUsers');
+
 Route::middleware('auth')
 ->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

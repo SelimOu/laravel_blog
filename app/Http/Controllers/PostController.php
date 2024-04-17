@@ -5,16 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Post;
-use App\Models\categorie;
+use App\Models\Categorie;
 use Illuminate\Support\Facades\Auth;
 class PostController extends Controller
 {
 
     public function index()
     {
+        $users = Auth::user()->role;
+        if ($users === 'client'){
         $posts = Post::where('user_id',Auth::User()->id)->get();
-
-        return view('posts.index', compact('posts'));
+        return view('posts.index', compact('posts'));}
+        else{
+            $posts = Post::all();
+            return view('posts.index', compact('posts'));}
+        
     }
 
 
@@ -25,7 +30,7 @@ class PostController extends Controller
             'description' => 'required',
             'content' => 'required',
             'image' => 'required|max:255',
-            'categorie' => 'required|max:255',
+            'categorie' => 'max:255',
             
         ]);
         $post =new Post;
@@ -36,11 +41,13 @@ class PostController extends Controller
         $post->user_id = Auth::id();
         $post->save();
 
-
-        foreach($request->categorie as $categories){
-
-        $post->categorie()->attach($categories);
-        }
+        
+        // foreach($request->categorie as $categories){
+            $categories = $request->categorie;
+            
+        $post->categories()->attach($categories);
+        // dd($request);
+        // }
        
 
         return redirect()->route('posts.index')
@@ -61,6 +68,11 @@ class PostController extends Controller
         $post = Post::find($id);
         $post->update($request->all());
 
+        $categories = $request->categorie;
+
+        $post->categories()->sync($categories);
+            
+
         return redirect()->route('posts.index')
             ->with('success', 'Post updated successfully.');
     }
@@ -69,6 +81,7 @@ class PostController extends Controller
     {
 
         $post = Post::find($id);
+        Post::find($id)->categories()->detach();
         $post->delete();
 
         return redirect()->route('posts.index')
@@ -88,8 +101,9 @@ class PostController extends Controller
     public function edit($id)
     {
         $post = Post::find($id);
+        $categories = Categorie::all();
 
-        return view('posts.edit', compact('post'));
+        return view('posts.edit', compact('post','categories'));
     }
 }
 

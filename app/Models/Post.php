@@ -25,7 +25,7 @@ public function User()
     return $this->belongsTo(User::class);
   }
 
-  public function categorie()
+  public function categories()
   {
     return $this->belongsToMany(Categorie::class);
   }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Categorie;
 use Illuminate\View\View;
 use App\Models\Post;
 use App\Models\User;
@@ -28,11 +29,27 @@ class PagesController extends Controller
         'table' => $table,
         ]);
     }
-    public function welcome(): view
+    public function welcome(request $request): view
     {
-       
-    return view('welcome',[
-        'posts' => post::All(),
+        $categories = Categorie::all();
+        // $cate = categorie::find('title');
+        
+        // foreach($categories as $cate){
+        //     $cate=$cate->title;
+        dump($request->categorie);
+        if (isset($request->categorie)){
+            foreach($request->categorie as $cate){
+        $post = Post::whereHas('categories', function ($query) use ($cate) {
+            $query->where('categories.id', $cate );
+           })->get();
+        }
+        }
+        // dump($categorie);
+        else{
+            $post = Post::all();
+        }
+    return view('welcome', compact('categories'),[
+        'posts' => $post
     ]);
     }
 

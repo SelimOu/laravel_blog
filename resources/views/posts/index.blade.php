@@ -32,7 +32,12 @@
                       <img src="{{$post['image']}}" alt="" class="imagesBlog" >
                       {{$post['description']}} <br>
                       {{$post['content']}}<br>
-                      {{$post->user->name}}
+                      {{$post->user->name}} <br>
+                      {{-- {{$post->categories[0]['title']}} --}}
+                      {{-- @dd($categories) --}}
+                      @foreach ($post->categories as $categori)
+                      {{$categori->title}}
+                      @endforeach
                   </div>
                   </div> <br>
                         <div class="card-footer">

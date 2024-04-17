@@ -44,7 +44,16 @@
                     </div>
                     <div class="form-group">
                         <label for="categorie">categorie</label>
-                        <input type="text" class="form-control" id="categorie" name="categorie" value="{{ $post->categorie }}"  required>
+                        @if($errors->any())
+                        {{implode('', $errors->all('Veuillez cocher une categorie'))}}
+                        @endif
+                        
+                        @foreach ($categories as $categorie)
+                        
+                        <input type="checkbox" id="categorie" name="categorie[]" 
+                        value ="{{$categorie->id}}"  > {{$categorie->title}}
+                        
+                        @endforeach 
                     </div>
                     <button type="submit" class="btn btn-primary">Editer un Post</button>
                 </form>

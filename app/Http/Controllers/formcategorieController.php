@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\User;
 use App\Models\Post;
 use App\Models\Categorie;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Auth;
 
 class formcategorieController extends Controller
 {
@@ -15,8 +17,15 @@ class formcategorieController extends Controller
 
 public function listcategorie()
 {
+    $users = Auth::user()->role;
+    
     $categories  = Categorie::all();
-    return view('listcategorie',compact('categories'));
+    if ($users === 'admin'){
+    return view('listcategorie',compact('categories','users'));
+}
+else {
+    return redirect()->route('dashboard');
+}
 }
 
 public function CreerCategorie(Request $request)
@@ -51,6 +60,8 @@ public function updateCategorie(Request $request, $id)
     {
 
         $categories = Categorie::find($id);
+        Categorie::find($id)->post()->detach();
+        
         $categories->delete();
 
         return redirect()->route('listcategorie');

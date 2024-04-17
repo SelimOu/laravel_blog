@@ -57,7 +57,17 @@
                      
                     </header>
                     <body>
+                        <form action="" method="get">
+                            @csrf
+                        @foreach ($categories as $categorie)
                         
+                        <input type="checkbox" id="categorie" name="categorie[]" 
+                        value ="{{$categorie->id}}"  > {{$categorie->title}}
+                        
+                        
+                        @endforeach 
+                        <input type="submit" value="trier">
+                        </form>
                     
                    
                     @foreach ($posts as $post)
