@@ -4,6 +4,7 @@
           {{ __('Dashboard') }}
       </h2>
   </x-slot>
+  
 
   <div class="py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -11,59 +12,76 @@
               <div class="p-6 text-gray-900">
                   {{ __("Connecté!") }}
                   <br><br>
-                  <a href="/dashboard/posts" ><button>Mes Posts</button> </a>
+                  <a  href="/dashboard/posts" ><button>Mes Posts</button> </a>
               </div>
 
               <nav class="navbar navbar-expand-lg navbar-light bg-warning p-6" >
                 <div class="container-fluid">
                   <div class="justify-end ">
                     <div class="col ">
-                      <a class="btn btn-sm btn-success" href={{ route('posts.create') }}>Ajouter des Posts </a>
+                      <a class="btn btn-sm btn-success  btn-sm rounded-full bg-blue-400 p-2" href={{ route('posts.create') }}>Ajouter des Posts </a>
                     </div>
                   </div>
                 </div>
               </nav>
+
+              <form action="" method="get">
+                @csrf
+            @foreach ($categories as $categorie)
+            
+            <input type="checkbox" id="categorie" name="categorie[]" 
+            value ="{{$categorie->id}}"  > {{$categorie->title}}
+            
+            
+            @endforeach 
+            <input type="submit" value="trier" class= "btn btn-succes btn-sm rounded-full bg-slate-400 p-2">
+            </form>
               <div class="container mt-5">
                 <div class="row">
                   @foreach ($posts as $post)
-                  <div class ="blog_container">
-                    <div>  {{$post['title']}}</div>
-                    <div class="content_Container">
-                      <img src="{{$post['image']}}" alt="" class="imagesBlog" >
-                      {{$post['description']}} <br>
-                      {{$post['content']}}<br>
-                      {{$post->user->name}} <br>
-                      {{-- {{$post->categories[0]['title']}} --}}
-                      {{-- @dd($categories) --}}
-                      @foreach ($post->categories as $categori)
-                      {{$categori->title}}
-                      @endforeach
-                  </div>
-                  </div> <br>
+                  <div class="blog_container">
+                      <div>{{$post['title']}}</div>
+                      <div class="content_Container">
+                          <img src="{{ asset('storage/'.$post['image'])}}" alt="" class="imagesBlog">
+                          Description: {{$post['description']}} <br>
+                          Content: {{$post['content']}}<br>
+                          Nom de l'auteur: {{$post->user->name}} <br>
+                          @if ($post->categories->isNotEmpty())
+                              Catégorie(s):
+                              @foreach ($post->categories as $category)
+                                  {{$category->title}}
+                              @endforeach
+                          @endif
+                      </div>
+                  </div><br>
                         <div class="card-footer">
                           <div class="row">
                             <div class="col-sm">
-                              <a href="{{ route('posts.edit', $post->id) }}"
+                              <a class= "btn btn-danger btn-sm rounded-full bg-slate-400 p-2" href="{{ route('posts.edit', $post->id) }}"
                         class="btn btn-primary btn-sm">Editer</a>
                             </div>
+                            <br>
                             <div class="col-sm">
                                 <form action="{{ route('posts.destroy', $post->id) }}" method="post">
                                   @csrf
                                   @method('DELETE')
-                                  <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                                  <button type="submit" class="btn btn-danger btn-sm rounded-full bg-red-500 p-2		" >Supprimer</button>
                                 </form>
+                                
                             </div>
-                          </div>
+                          </div> <br>
+                          @endforeach
                         </div>
                       </div>
                     </div>
-                  @endforeach
+                  
                 </div>
               </div>
           </div>
       </div>
   </div>
   <div>
+    {{$posts->WithqueryString()->links()}}
   
   
 
@@ -72,18 +90,4 @@
 
 </x-app-layout>
 
-        {{-- <!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <meta http-equiv="X-UA-Compatible" content="ie=edge">
-          @vite(['resources/css/app.css', 'resources/js/app.js'])
-          <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-          <title>Posts</title>
-        </head>
-        <body>
-      
-        </body>
-        </html> --}}
+       

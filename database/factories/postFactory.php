@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 use Illuminate\Support\Str;
+use App\Models\User;
+
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,11 +20,12 @@ class postFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => fake()->title(),
+            'title' => "Titre",
             'description' => fake()->sentence(),
             'content' => fake()->paragraph(),
-            'image' => fake()->imageUrl(),
-            'user_id'=> fake()->randomDigit()
+            'image' => fake()->randomelement(['images/cayeux-services-payants.jpg','images/elizeu-dias-RN6ts8IZ4_0-unsplash.jpg','images/istockphoto-489833698-612x612.jpg']),
+        
+            'user_id'=> User::all()->random()->id,
         ];
     }
 }

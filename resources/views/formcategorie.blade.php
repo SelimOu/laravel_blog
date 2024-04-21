@@ -12,9 +12,9 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-warning">
+    <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
-            <a class="navbar-brand h1" href={{ route('listcategorie') }}>categories</a>
+            <a class="navbar-brand h1" href={{ route('listcategorie') }}>Categories</a>
             <div class="justify-end ">
                 <div class="col ">
                 </div>
@@ -25,22 +25,23 @@
         <div class="row h-100 justify-content-center align-items-center">
             <div class="col-10 col-md-8 col-lg-6">
                 <h3>AJouter une categorie</h3>
-                <form action="{{ route('creer.categorie') }}" method="post">
+                <form action="{{ route('creer.categorie') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
-                        <label for="title">Title</label>
+                        <label for="title">Title: </label>
                         <input type="text" class="form-control" id="title" name="title" required>
                     </div>
                     <div class="form-group">
-                        <label for="image">image</label>
-                        <input type="text" class="form-control" id="image" name="image" required>
+                        <label for="image">Image: </label> <br>
+                        <input type="file" name="image" id ="image" required>
                     </div>
                     <div class="form-group">
-                        <label for="description">description</label>
+                        <label for="description">Description: </label>
                         <input type="text" class="form-control" id="description" name="description" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Ajouter une categorie</button>
                 </form>
+                <a href={{ route('listcategorie') }} class="btn btn-primary">Retour</a>
             </div>
         </div>
     </div>

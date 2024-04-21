@@ -66,28 +66,40 @@
                         
                         
                         @endforeach 
-                        <input type="submit" value="trier">
+                        <input  class= "btn btn-danger btn-sm rounded-full bg-slate-400 p-2" type="submit" value="trier">
                         </form>
+                        <br>
                     
                    
                     @foreach ($posts as $post)
                     @if ($post->user)
-                    <div class ="blog_container">
-                      <div>  {{$post['title']}}</div>
-                      <div class="content_Container">
-                        <img src="{{$post['image']}}" alt="" class="imagesBlog" >
-                        {{$post['description']}}
-                        {{$post['content']}}
-                        {{$post->user->name}}
-                    </div>
-                    </div> <br>
+                    <div class="container">
+                        <div>{{$post['title']}}</div>
+                        <div class="content_Container">
+                            <img src="{{ asset('storage/'.$post['image'])}}" alt="" class="imagesBlog">
+                            Description: {{$post['description']}} <br>
+                            
+                            Nom de l'auteur: {{$post->user->name}} <br>
+                            @if ($post->categories->isNotEmpty())
+                                Catégorie(s):
+                                @foreach ($post->categories as $category)
+                                    {{$category->title}}
+                                @endforeach
+                            @endif
+                        </div>
+                    </div><br>
+                        <a  class= "btn btn-danger btn-sm rounded-full bg-slate-400 p-2" href="{{route('show',['post'=>$post->id])}}">Afficher le Post</a>
+                     <br> <br>
                     @endif
                         @endforeach
-                    
+                    </div>
+                </div>
 
                     
 
                     </body>
+
+                    {{$posts->WithqueryString()->links()}}
 
                     <footer class="py-16 text-center text-sm text-black dark:text-white/70">
                         Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})

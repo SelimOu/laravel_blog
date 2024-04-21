@@ -19,14 +19,12 @@ public function listcategorie()
 {
     $users = Auth::user()->role;
     
-    $categories  = Categorie::all();
-    if ($users === 'admin'){
+    $categories  = Categorie::query()->paginate(2);;
+    
     return view('listcategorie',compact('categories','users'));
 }
-else {
-    return redirect()->route('dashboard');
-}
-}
+
+
 
 public function CreerCategorie(Request $request)
 {
@@ -37,7 +35,8 @@ public function CreerCategorie(Request $request)
         
     ]);
 
-    Categorie::create($request->all());
+    $categories =Categorie::create($request->all());
+    $this->StoreImg($categories);
     return redirect()->route('listcategorie');
     
 }
@@ -53,6 +52,8 @@ public function updateCategorie(Request $request, $id)
         $categories = Categorie::find($id);
         $categories->update($request->all());
 
+        $this->StoreImg($categories);
+
         return redirect()->route('listcategorie');
     }
 
@@ -60,7 +61,7 @@ public function updateCategorie(Request $request, $id)
     {
 
         $categories = Categorie::find($id);
-        Categorie::find($id)->post()->detach();
+        $categories->post()->detach();
         
         $categories->delete();
 
@@ -74,5 +75,14 @@ public function updateCategorie(Request $request, $id)
         return view('editformCategorie', compact('categories'));
 
 }
+private function StoreImg(Categorie $categories){
+
+    if(request('image')){
+        $categories->update([
+            'image'=>request('image')->store('images', 'public'),
+        ]);
+    }
+}
+
 }
 

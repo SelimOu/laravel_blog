@@ -15,7 +15,7 @@ class AdminController extends Controller
     {
         
         $users = Auth::user()->role;
-        dump($users);
+        // dump($users);
         
         
         if ($users === 'admin'){
@@ -38,26 +38,35 @@ public function users()
 {
     $users = Auth::user()->role;
     
-    $afficherUser  = User::all();
-    if ($users === 'admin'){
+    $afficherUser  = User::query()->paginate(3);
+    // if ($users === 'admin'){
     return view('users',compact('afficherUser','users'));
-}
-else {
-    return redirect()->route('dashboard');
-}
+// }
+// else {
+    // return redirect()->route('dashboard');
+// }
 }
 
 public function destroy($id)
-    {
+    
+{
+    $user = User::find($id);
 
-        $users = User::find($id);
-        
-        $post = Post::all()->where('user_id',$id);
-        $users->delete();
-        foreach($post as $pos){
-          $pos->categories()->detach();
-          $pos->delete();
-        }
+    if(!$user) {
+        return redirect()->route('users')->with('error', 'Utilisateur non trouvé');
+    }
+    
+    $posts = Post::where('user_id', $id)->get();
+
+    foreach($posts as $post){
+        $post->categories()->detach();
+        $post->delete();
+    }
+
+    $user->delete();
+
+    
+
         return redirect()->route('users');
     }
     public function update(Request $request, $id)

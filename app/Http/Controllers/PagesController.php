@@ -36,24 +36,42 @@ class PagesController extends Controller
         
         // foreach($categories as $cate){
         //     $cate=$cate->title;
-        dump($request->categorie);
+        // dump($request);
         if (isset($request->categorie)){
             foreach($request->categorie as $cate){
         $post = Post::whereHas('categories', function ($query) use ($cate) {
             $query->where('categories.id', $cate );
-           })->get();
+           })->paginate(5);
         }
         }
         // dump($categorie);
         else{
-            $post = Post::all();
+            $post = Post::query()->paginate(5);
         }
+
+        // $post = paginate();
+
     return view('welcome', compact('categories'),[
         'posts' => $post
     ]);
     }
-
-
     
 
-}
+    public function show($id)
+    {
+        // $post = Post::all();
+        $post = Post::all();
+        $post = Post::find($id);
+        // dd($post);
+        
+        // dump($post);
+
+        return view('posts.show',[
+            'post' => $post
+        ]);    
+        // return redirect()->route('show',['post'=>$post->id]);[
+        //     'posts' => $post];
+        }
+    }
+
+

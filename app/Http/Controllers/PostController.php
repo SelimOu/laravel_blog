@@ -10,18 +10,37 @@ use Illuminate\Support\Facades\Auth;
 class PostController extends Controller
 {
 
-    public function index()
+    public function index(request $request)
     {
+        $categories = Categorie::all();
         $users = Auth::user()->role;
-        if ($users === 'client'){
-        $posts = Post::where('user_id',Auth::User()->id)->get();
-        return view('posts.index', compact('posts'));}
-        else{
-            $posts = Post::all();
-            return view('posts.index', compact('posts'));}
         
+    
+        if ($users === 'client') {
+            
+            if ($request->has('categorie')) {
+                $posts = Post::where('user_id', Auth::user()->id)->whereHas('categories', function ($query) use ($request) {
+                    $query->whereIn('categories.id', $request->categorie);
+                })->paginate(5);
+            } else {
+                
+                $posts = Post::where('user_id', Auth::user()->id)->paginate(5);
+            }
+        } else {
+            if ($request->has('categorie')) {
+                $posts = Post::whereHas('categories', function ($query) use ($request) {
+                    $query->whereIn('categories.id', $request->categorie);
+                })->paginate(5);
+            }
+            
+            else{
+            $posts = Post::query()->paginate(5);
+            }
+        }
+    
+        return view('posts.index', compact('posts', 'categories'));
+  
     }
-
 
     public function store(Request $request)
     {
@@ -29,17 +48,23 @@ class PostController extends Controller
             'title' => 'required|max:255',
             'description' => 'required',
             'content' => 'required',
-            'image' => 'required|max:255',
+            'image' => 'max:255',
             'categorie' => 'max:255',
             
         ]);
+
+
         $post =new Post;
         $post->title = $request->title;
         $post->content = $request->content;
         $post->description = $request->description;
-        $post->image = $request->image; 
+        $post->image = $request->image;
+        // dd($post->image);
+       
         $post->user_id = Auth::id();
         $post->save();
+
+        // dd($post);
 
         
         // foreach($request->categorie as $categories){
@@ -50,6 +75,8 @@ class PostController extends Controller
         // }
        
 
+       $this->StoreImg($post);
+       
         return redirect()->route('posts.index')
             ->with('success', 'Post created successfully.');
     }
@@ -62,8 +89,11 @@ class PostController extends Controller
             'description' => 'required',
             'content' => 'required',
             'image' => 'required|max:255',
-            'categorie' => 'required|max:255',
+            'categorie' => 'max:255',
         ]);
+
+
+        
 
         $post = Post::find($id);
         $post->update($request->all());
@@ -72,6 +102,7 @@ class PostController extends Controller
 
         $post->categories()->sync($categories);
             
+        $this->StoreImg($post);
 
         return redirect()->route('posts.index')
             ->with('success', 'Post updated successfully.');
@@ -105,25 +136,16 @@ class PostController extends Controller
 
         return view('posts.edit', compact('post','categories'));
     }
+
+
+private function StoreImg(Post $post){
+
+    if(request('image')){
+        $post->update([
+            'image'=>request('image')->store('images', 'public'),
+        ]);
+    }
 }
 
-//     public function mypost(): View
-//     {
-//     $myPosts = post::all();
-//     return view('myposts',[
-//         'myPosts' =>$myPosts,
-//     ]);
-// }
 
-// public function Ajouter(Request $request){
-//     $request->validate([
-        // 'title' => 'required|max:255',
-        // 'desctiption' => 'required',
-        // 'content' => 'required',
-        // 'image' => 'required|max:255',
-//     ]);
-//     Post::create($request->all());
-//     return redirect()->route('welcome')->whith('succes');
-
-// }
-
+}

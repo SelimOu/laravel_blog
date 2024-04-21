@@ -12,43 +12,46 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-warning">
+    <nav class="navbar navbar-expand-lg navbar-light ">
         <div class="container-fluid">
             <a class="navbar-brand h1" href={{ route('posts.index') }}>Mes Posts</a>
             <div class="justify-end ">
-                <div class="col ">
-                    <a class="btn btn-sm btn-success" href={{ route('posts.create') }}>Ajouter dans Post</a>
-                </div>
+                
             </div>
+        </div>
     </nav>
 
     <div class="container h-100 mt-5">
         <div class="row h-100 justify-content-center align-items-center">
             <div class="col-10 col-md-8 col-lg-6">
                 <h3>Ajouter un Post</h3>
-                <form action="{{ route('posts.store') }}" method="post">
+                <form action="{{ route('posts.store') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
-                        <label for="title">Title</label>
+                        <label for="title">Title: </label>
                         <input type="text" class="form-control" id="title" name="title" required>
                     </div>
                     <div class="form-group">
-                        <label for="content">content</label>
+                        <label for="content">Content: </label>
                         <input type="text" class="form-control" id="content" name="content" required>
                     </div>
                     <div class="form-group">
-                        <label for="image">image</label>
-                        <input type="text" class="form-control" id="image" name="image" required>
+                        <label for="image">Image: </label> <br>
+                        {{-- <input type="text" class="form-control" id="image" name="image" > --}}
+                        
+                            
+                            <input type="file" name="image" id ="image" required>
+                            
                     </div>
                     <div class="form-group">
-                        <label for="description">description</label>
+                        <label for="description">Description: </label>
                         <input type="text" class="form-control" id="description" name="description" required>
                     </div>
                     <div class="form-group">
-                        <label for="categorie">categorie</label>
-                        @if($errors->any())
+                        <label for="categorie">Categorie(s): </label>
+                        {{-- @if($errors->any())
                         {{implode('', $errors->all('Veuillez cocher une categorie'))}}
-                        @endif
+                        @endif --}}
                         
                         @foreach ($categories as $categorie)
                         
@@ -59,6 +62,8 @@
                     </div>
                     <button type="submit" class="btn btn-primary">Ajouter un Post</button>
                 </form>
+                <br> <br>
+                <a href={{ route('posts.index') }} class="btn btn-primary">Retour</a>
             </div>
         </div>
     </div>
