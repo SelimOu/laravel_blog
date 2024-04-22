@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\Categorie;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 class PostController extends Controller
 {
@@ -113,8 +114,12 @@ class PostController extends Controller
 
         $post = Post::find($id);
         Post::find($id)->categories()->detach();
-        $post->delete();
+        
+        
+        $imagepath=public_path('storage/'.$post->image);
+        unlink($imagepath);
 
+        $post->delete();
         return redirect()->route('posts.index')
             ->with('success', 'Post deleted successfully');
     }
